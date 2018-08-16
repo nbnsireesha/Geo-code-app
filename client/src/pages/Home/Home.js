@@ -10,39 +10,47 @@ import CSVReader from "react-csv-reader";
 
 class Home extends Component {
   // Setting component's initial state
-  state = {
-    articles: [],
-    topic: "",
-    startYear: "",
-    endYear: ""
-  };
-
-  // saves article to database
-  saveArticle = index => {
-    API.saveArticle({
-      title: this.state.articles[index].headline.main,
-      blurb: this.state.articles[index].snippet,
-      date: this.state.articles[index].pub_date,
-      url: this.state.articles[index].web_url
-    }).then(res => alert("Article saved to database!")).catch(err => console.log(err));
-  };
-
-  // Handles updating component state when the user types into the input field
-  handleInputChange = event => {
-    const { name, value } = event.target;
-    this.setState({
-      [name]: value
-    });
-  };
-
+  constructor(props) {
+    super(props);
+    this.state = {
+      add: 'bala',
+      addresses: []
+    };
+    console.log(this);
+    this.handleForce = this.handleForce.bind(this);
+  }
   // When the form is submitted, use the API.searchArticles method to find articles
   // Then load articles from the database
   // handleFormSubmit = event => {
   //   event.preventDefault();
     
   // };
-   handleForce = data => {
-    console.log(data);
+  handleForce(data){
+    for (var i = 1; i < data.length; i++) {
+      for (var j = 0; j < data.length; j++) {
+        if (data[i][j]){
+          // console.log(data[i][j]);
+          API.searchAddress(data[i][j])
+            .then(res =>{
+
+                const address = {
+                  formatted_address: res.data.results[0].formatted_address,
+                  lat: res.data.results[0].geometry.location.lat,
+                  lng: res.data.results[0].geometry.location.lng
+                }
+                const addressesArray = this.state.addresses.slice();
+                addressesArray.push(address);
+                this.setState({
+                  addresses: addressesArray
+                })
+                this.saveAddressInDb(address);
+                
+              
+            })
+            .catch(err => console.log("error in catch handleForce:", err));
+        }
+      }
+    }
   };
 
   render() {
@@ -55,9 +63,7 @@ class Home extends Component {
         <Container fluid>
           <Row>
           
-            <Col size="md-6">
-              
-                
+            <Col size="col-md-6">
             <div className="container">
               <CSVReader
                 cssClass="react-csv-input"
@@ -68,6 +74,39 @@ class Home extends Component {
                   
             </Col>
           </Row>
+
+
+          <Row>
+            <Col size="col-md-10">
+                  {this.state.addresses.length ? (
+                    <List>
+                      {this.state.addresses.map((address, index) => {
+                        return (
+                          <ListItem key={index}>
+                            <p>
+                              <strong>{address.formatted_address}</strong>
+                            </p>
+                            <p>
+                              <strong>{address.lat}</strong>
+                            </p>
+                            <p>
+                              <strong>{address.lng}</strong>
+                            </p>
+                            
+                          </ListItem>
+                        );
+                      })}
+                    </List>
+                  ) : (
+                    <div>
+                      <p></p>
+                      <h5>No Results to Display</h5>
+                    </div>
+                    )}
+            </Col>
+          </Row>
+
+
         </Container>
       </div>
     );
