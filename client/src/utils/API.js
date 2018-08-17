@@ -8,25 +8,18 @@ export default {
           key:'AIzaSyARonr8hONblrmsYbB_flNzrLDggm348aE'
         }
     })
-    // .then(function(response){
-    //   var address ={
-    //     formatted_address: response.data.results[0].formatted_address,
-    //     lat: response.data.results[0].geometry.location.lat,
-    //     lng: response.data.results[0].geometry.location.lng
-    //   }
-    //   console.log("Address with lat, long " , address);
-    //   return address;
-    // })
-    // .catch(function(error){
-    //   console.log("error in API call: ", error);
-    // })
   },
-  // Gets all saved articles
-  getArticles: function() {
-    return axios.get("/api/articles/");
+  // Gets all address from DB
+  getAddress: function() {
+    return axios.get("/api/address/");
   },
-  //
+  // save address from DB
   saveAddressInDb: function(addressInfo){
+    console.log(addressInfo);
     return axios.post("/api/address", addressInfo);
+  },
+  // Delete all records from db 
+  deleteAllAddress : function(){
+    return axios.delete('/api/address/');
   }
 };

@@ -30,6 +30,11 @@ class Home extends Component {
       for (var j = 0; j < data.length; j++) {
         if (data[i][j]){
           // console.log(data[i][j]);
+          API.deleteAllAddress()
+            .then(res => {
+
+            })
+            .catch(err => console.log("error in catch handler:", err));
           API.searchAddress(data[i][j])
             .then(res =>{
 
@@ -38,20 +43,43 @@ class Home extends Component {
                   lat: res.data.results[0].geometry.location.lat,
                   lng: res.data.results[0].geometry.location.lng
                 }
-                const addressesArray = this.state.addresses.slice();
-                addressesArray.push(address);
-                this.setState({
-                  addresses: addressesArray
-                })
-                this.saveAddressInDb(address);
-                
-              
+                // const addressesArray = this.state.addresses.slice();
+                // addressesArray.push(address);
+                // this.setState({
+                //   addresses: addressesArray
+                // })
+                this.saveAddressInDb(address);  
             })
             .catch(err => console.log("error in catch handleForce:", err));
         }
       }
     }
   };
+  // save addresses in the database
+  saveAddressInDb  =  (addressInfo) => {
+    console.log(addressInfo);
+    API.saveAddressInDb({
+      formatted_address: addressInfo.formatted_address,
+      lat: addressInfo.lat,
+      lng: addressInfo.lng
+    })
+    
+
+  }
+
+  // load saved addresses from DB 
+  loadAddress = () => {
+    API.getAddress()
+      .then(res => {
+        console.log("--res--",res);
+        this.setState({
+            addresses: res.data
+        }) 
+        console.log("---in loadAddress method----",this.state.addresses);
+      })
+      .catch(err => console.log(err));
+
+  }
 
   render() {
     return (
@@ -70,6 +98,13 @@ class Home extends Component {
                 label="Select CSV with secret Death Star statistics"
                 onFileLoaded={this.handleForce}
               />
+            
+              <button type = "submit"
+                onClick={this.loadAddress}
+              >
+              Show Table
+              </button>
+
             </div>
                   
             </Col>

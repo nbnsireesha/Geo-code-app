@@ -1,8 +1,13 @@
 {
-  "name": "nyt-react-app",
+  "name": "client",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:3001/",
+  "proxy": {
+    "/api/address":  {
+      "target": "http://localhost:3001",
+      "secure": false
+    }
+  },
   "dependencies": {
     "axios": "^0.17.1",
     "hoek": "^5.0.3",
