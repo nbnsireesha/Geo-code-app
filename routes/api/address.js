@@ -7,4 +7,7 @@ router.route("/")
   .post(addressController.create)
   .delete(addressController.delete);
 
+router.route("/next")
+  .get(addressController.find);
+
 module.exports = router; 

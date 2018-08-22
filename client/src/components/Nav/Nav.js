@@ -14,9 +14,6 @@ const Nav = () =>
               : ""}>
           <a className="nav-link" href="/">Home <span className="sr-only">(current)</span></a>
         </li>
-        <li className={window.location.pathname === "/saved" ? "active" : ""}>
-          <a className="nav-link" href="/saved">Saved Articles</a>
-        </li>
       </ul>
     </div>
   </nav>;

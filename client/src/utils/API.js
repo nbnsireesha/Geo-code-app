@@ -10,8 +10,8 @@ export default {
     })
   },
   // Gets all address from DB
-  getAddress: function() {
-    return axios.get("/api/address/");
+  getAddress: function(page) {
+    return axios.get("/api/address?page="+page);
   },
   // save address from DB
   saveAddressInDb: function(addressInfo){
@@ -21,5 +21,9 @@ export default {
   // Delete all records from db 
   deleteAllAddress : function(){
     return axios.delete('/api/address/');
+  },
+  getNextAddress: function(){
+    return axios.get("/api/articles/next")
+
   }
 };

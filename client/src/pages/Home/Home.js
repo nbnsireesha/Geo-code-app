@@ -14,7 +14,8 @@ class Home extends Component {
     super(props);
     this.state = {
       add: 'bala',
-      addresses: []
+      addresses: [],
+      page: 1
     };
     console.log(this);
     this.handleForce = this.handleForce.bind(this);
@@ -69,7 +70,8 @@ class Home extends Component {
 
   // load saved addresses from DB 
   loadAddress = () => {
-    API.getAddress()
+    var page = this.state.page;
+    API.getAddress(page)
       .then(res => {
         console.log("--res--",res);
         this.setState({
@@ -79,6 +81,12 @@ class Home extends Component {
       })
       .catch(err => console.log(err));
 
+  }
+
+  // Load Next 10 Address
+  loadNextAddress = () => {
+    this.setState({page: ++this.state.page});
+    this.loadAddress();
   }
 
   render() {
@@ -114,24 +122,30 @@ class Home extends Component {
           <Row>
             <Col size="col-md-10">
                   {this.state.addresses.length ? (
+                    <div>
                     <List>
                       {this.state.addresses.map((address, index) => {
                         return (
-                          <ListItem key={index}>
-                            <p>
-                              <strong>{address.formatted_address}</strong>
-                            </p>
-                            <p>
-                              <strong>{address.lat}</strong>
-                            </p>
-                            <p>
-                              <strong>{address.lng}</strong>
-                            </p>
-                            
-                          </ListItem>
+                          <div>
+                            <ListItem key={index}>
+                              <p>
+                                <strong>{address.formatted_address}</strong>
+                              </p>
+                              <p>
+                                <strong>{address.lat}</strong>
+                              </p>
+                              <p>
+                                <strong>{address.lng}</strong>
+                              </p>
+                              
+                            </ListItem>
+                          </div>
                         );
                       })}
                     </List>
+                    <p></p>
+                    <button type = 'submit' onClick={this.loadNextAddress}><a href="#" className="next round center">&#8250;</a></button>
+                    </div>
                   ) : (
                     <div>
                       <p></p>
